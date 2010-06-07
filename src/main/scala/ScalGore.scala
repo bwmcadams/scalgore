@@ -13,7 +13,7 @@ import se.scalablesolutions.akka.util._
 object ScalGore extends Logging {
 
   def main(args: Array[String]) {
-    val bot = new IrcBot("ScalGore", true, "irc.freenode.net", "##akkaTest")
+    val bot = new IrcBot("ScalGore", true, "irc.freenode.net", "#akka")
   }
 }
 

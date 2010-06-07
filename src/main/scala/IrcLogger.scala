@@ -23,24 +23,25 @@ trait IrcMessage {
   val login: String
   val hostname: String
   val message: String
+  val date = new java.util.Date // capture date as soon as object is created
 }
 
 case class IrcAction(val sender: String,
                      val login: String,
                      val hostname: String,
                      val message: String,
-                     val target: String)
+                     val target: String) extends IrcMessage
 
 case class IrcPublicMessage(val channel: String,
                             val sender: String,
                             val login: String,
                             val hostname: String,
-                            val message: String)
+                            val message: String) extends IrcMessage
 
 case class IrcPrivateMessage(val sender: String,
                              val login: String,
                              val hostname: String,
-                             val message: String)
+                             val message: String) extends IrcMessage
 
 
 class IrcLogger extends Actor with Logging {
@@ -55,7 +56,7 @@ class IrcLogger extends Actor with Logging {
       val idx = ("sender" -> 1, "keywords" -> 1)
       mongo(name).ensureIndex(idx)
       val obj: DBObject = ("type" -> "publicMessage", "channel" -> channel, "sender" -> sender, "login" -> login,
-                 "hostname" -> hostname, "message" -> message, "keywords" -> kws)
+                 "hostname" -> hostname, "message" -> message, "keywords" -> kws, "date" -> pub.date)
       // index in elasticsearch
       log.info(obj.toString)
       val response = es.index(indexRequest("irclogs").`type`("message")
@@ -71,7 +72,7 @@ class IrcLogger extends Actor with Logging {
       val name = fixChanName(target)
       val kws = parseMessage(message)
       val obj: DBObject = ("type" -> "action", "target" -> target, "sender" -> sender, "login" -> login,
-                 "hostname" -> hostname, "message" -> message, "keywords" -> kws)
+                 "hostname" -> hostname, "message" -> message, "keywords" -> kws, "date" -> act.date)
       val idx = ("sender" -> 1, "keywords" -> 1)
       mongo(name).ensureIndex(idx)
       // index in elasticsearch
