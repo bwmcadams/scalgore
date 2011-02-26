@@ -17,6 +17,7 @@ class ScalGoreProject(info: ProjectInfo) extends DefaultProject(info) with AkkaP
 
   // we already have akka-actor from AkkaProject
   val akka_camel = akkaModule("camel")
+  val camel_irc = "org.apache.camel" % "camel-irc" % "2.5.0"
 
   val configgy = "net.lag" % "configgy" % "2.0.2"
   val casbah = "com.mongodb.casbah" %% "casbah" % "2.0.3"
