@@ -7,8 +7,8 @@ package net.evilmonkeylabs.scalgore
 
 import org.jibble.pircbot._
 import net.lag.configgy.Configgy
-import se.scalablesolutions.akka.actor._
-import se.scalablesolutions.akka.util._
+import akka.actor._
+import akka.util._
 
 object ScalGore extends Logging {
 
