@@ -28,11 +28,11 @@ object ScalGore extends Logging {
 
     CamelServiceManager.startCamelService
 
-    for (n <- cfg.getList(Config.networks);
-    	   host <- cfg.getString(Config.host(n));
-    	   nick <- cfg.getString(Config.nick(n))) {
-      val network = Network(n, host, nick, cfg.getList(Config.channels(n)))
-      log.info("Starting actor for: %s", network)
+    for (name <- cfg.getList(Config.networks);
+         host <- cfg.getString(Config.host(name));
+         nick <- cfg.getString(Config.nick(name))) {
+      val network = Network(name, host, nick, cfg.getList(Config.channels(name)))
+      log.info("Starting actor for: %s", name)
       actorOf(new IrcConsumer(network)).start
    	}
   }
