@@ -8,7 +8,7 @@ class ScalGoreProject(info: ProjectInfo) extends DefaultProject(info) with AkkaP
   val SonatypeReleasesRepo = MavenRepository("Sonatype OSS Repo", "http://oss.sonatype.org/content/repositories/releases")
 
 
-  val configgyConfig = ModuleConfiguration("net.lag.configgy", TwitterRepo)
+  val configgyConfig = ModuleConfiguration("net.lag", "configgy", "2.0.2", TwitterRepo)
   val elasticConfig = ModuleConfiguration("org.elasticsearch", SonatypeReleasesRepo)
 
 
@@ -19,7 +19,7 @@ class ScalGoreProject(info: ProjectInfo) extends DefaultProject(info) with AkkaP
   val akka_camel = akkaModule("camel")
   val camel_irc = "org.apache.camel" % "camel-irc" % "2.5.0"
 
-  val configgy = "net.lag" % "configgy" % "2.0.2"
+  //val configgy = "net.lag" % "configgy" % "2.0.2"
   val casbah = "com.mongodb.casbah" %% "casbah" % "2.0.3"
 
 }
