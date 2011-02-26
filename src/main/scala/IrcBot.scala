@@ -6,16 +6,14 @@ import akka.actor.Actor._
 import akka.util._
 
 class IrcBot(val name: String,
-             val verbose: Boolean,
-             val server: String,
-             val channel: String) extends PircBot with Logging {
+             val verbose: Boolean) extends PircBot with Logging {
 
-  log.info("Setting up Scala IRC bot (%s/%s).", server, channel)
+  log.info("Starting up ScalGore")
   setName(name)
   setVerbose(verbose)
-  connect(server)
-  joinChannel(channel)
+
   val ircLog = actorOf[IrcLogger].start
+
   override def onAction(sender: String, login: String, 
                         hostname: String, target: String,
                         action: String) = {
@@ -34,6 +32,12 @@ class IrcBot(val name: String,
                                 hostname: String, message: String) = {
     log.trace("[PRIVMSG] <%s:%s@%s> %s", sender, login, hostname, message)
     ircLog ! IrcPrivateMessage(sender, login, hostname, message)
+  }
+
+  def join(conn: Connection) = {
+    log.info("Connecting to network [%s] at [%s]", conn.name, conn.uri)
+    connect(conn.uri)
+    conn.channels.foreach { joinChannel(_) }
   }
 }
 
