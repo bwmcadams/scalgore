@@ -1,18 +1,15 @@
 package net.evilmonkeylabs.scalgore
 
 import net.lag.configgy.Configgy
-import akka.actor.Actor
-import Actor._
+import akka.actor.{Actor, ActorRef}
 import akka.util._
 import akka.camel._
 
-class IrcConsumer(network: Network) extends Actor with Consumer with Logging {
-  
-  lazy val _endpointUri = "irc:%s@%s?channels=%s" format (network.nick, network.host, network.channels.mkString(","))
-  
-  def endpointUri = _endpointUri
+class IrcConsumer(network: Network, ircLog: ActorRef) extends Actor with Consumer with Logging {
 
-  val ircLog = actorOf[IrcLogger].start
+  lazy val _endpointUri = "irc:%s@%s?channels=%s" format (network.nick, network.host, network.channels.mkString(","))
+
+  def endpointUri = _endpointUri
 
   def receive = {
     case Message(body: String, headers: Map[String, String]) => {
