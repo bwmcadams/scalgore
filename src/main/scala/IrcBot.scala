@@ -1,44 +1,30 @@
 package net.evilmonkeylabs.scalgore
 
-import org.jibble.pircbot._
 import net.lag.configgy.Configgy
-import akka.actor.Actor._
+import akka.actor.Actor
+import Actor._
 import akka.util._
+import akka.camel._
 
-class IrcBot(val name: String,
-             val verbose: Boolean) extends PircBot with Logging {
-
-  log.info("Starting up ScalGore")
-  setName(name)
-  setVerbose(verbose)
+class IrcConsumer(network: Network) extends Actor with Consumer with Logging {
+  
+  lazy val _endpointUri = "irc:%s@%s?channels=%s" format (network.nick, network.host, network.channels.mkString(","))
+  
+  def endpointUri = _endpointUri
 
   val ircLog = actorOf[IrcLogger].start
 
-  override def onAction(sender: String, login: String, 
-                        hostname: String, target: String,
-                        action: String) = {
-    log.trace("[ACT] {%s} <%s:%s@%s> %s", target, sender, login, hostname, action)
-    ircLog ! IrcAction(sender, login, hostname, action, target)
-  }
-  
-  override def onMessage(channel: String, sender: String, 
-                         login: String, hostname: String, 
-                         message: String) = {
-    log.trace("[MSG] {%s} <%s:%s@%s> %s", channel, sender, login, hostname, message)
-    ircLog ! IrcPublicMessage(channel, sender, login, hostname, message)
-  }
-  
-  override def onPrivateMessage(sender: String, login: String, 
-                                hostname: String, message: String) = {
-    log.trace("[PRIVMSG] <%s:%s@%s> %s", sender, login, hostname, message)
-    ircLog ! IrcPrivateMessage(sender, login, hostname, message)
-  }
-
-  def join(conn: Connection) = {
-    log.info("Connecting to network [%s] at [%s]", conn.name, conn.uri)
-    connect(conn.uri)
-    conn.channels.foreach { joinChannel(_) }
-  }
+  def receive = {
+    case Message(body: String, headers: Map[String, String]) => {
+      for ( sender <- headers.get("irc.user.nick");
+              host <- headers.get("irc.user.host");
+             login <- headers.get("irc.user.username");
+           channel <- headers.get("irc.target");
+           msgtype <- headers.get("irc.messageType") if msgtype == "PRIVMSG") {
+        ircLog ! IrcPublicMessage(channel, sender, login, host, body)
+      } // for
+    } // case
+  } // receive
 }
 
 // vim: set ts=2 sw=2 sts=2 et:

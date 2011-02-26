@@ -26,15 +26,14 @@ object ScalGore extends Logging {
   def main(args: Array[String]) {
     val cfg = CConfig.fromResource("scalgore.conf", getClass.getClassLoader)
 
-    val cfg = Configgy.config
+    CamelServiceManager.startCamelService
 
-
-
-    for (s <- cfg.getList(Config.servers);
-    	 uri <- cfg.getString(Config.uri(s))) {
-      log.info("lala")
-      val conn = Connection(s, uri, cfg.getList(Config.channels(s)))
-      bot.join(conn)
+    for (n <- cfg.getList(Config.networks);
+    	   host <- cfg.getString(Config.host(n));
+    	   nick <- cfg.getString(Config.nick(n))) {
+      val network = Network(n, host, nick, cfg.getList(Config.channels(n)))
+      log.info("Starting actor for: %s", network)
+      actorOf(new IrcConsumer(network)).start
    	}
   }
 }
