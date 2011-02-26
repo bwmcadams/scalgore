@@ -7,7 +7,9 @@ package net.evilmonkeylabs.scalgore
 
 import org.jibble.pircbot._
 import net.lag.configgy.{Config=>CConfig}
-import akka.actor.Actor.actorOf
+import akka.actor._
+import Actor._
+import akka.config.Supervision._
 import akka.util._
 import akka.camel._
 
@@ -28,13 +30,21 @@ object ScalGore extends Logging {
 
     CamelServiceManager.startCamelService
 
-    for (name <- cfg.getList(Config.networks);
-         host <- cfg.getString(Config.host(name));
-         nick <- cfg.getString(Config.nick(name))) {
-      val network = Network(name, host, nick, cfg.getList(Config.channels(name)))
-      log.info("Starting actor for: %s", name)
-      actorOf(new IrcConsumer(network)).start
-   	}
+    val irclog = actorOf[IrcLogger].start
+
+    val consumers =
+      for (name <- cfg.getList(Config.networks);
+           host <- cfg.getString(Config.host(name));
+           nick <- cfg.getString(Config.nick(name)))
+        yield actorOf(new IrcConsumer(Network(name, host, nick, cfg.getList(Config.channels(name))), irclog))
+
+    val supervisor = Supervisor(
+      SupervisorConfig(
+        OneForOneStrategy(List(classOf[Exception]), 3, 10),
+        Supervise(irclog, Permanent) +:
+        consumers.map { a => Supervise(a, Permanent) }.toList))
+
+    supervisor.start
   }
 }
 
