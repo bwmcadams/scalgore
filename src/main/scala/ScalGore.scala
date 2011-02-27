@@ -5,7 +5,6 @@
  */
 package net.evilmonkeylabs.scalgore
 
-import org.jibble.pircbot._
 import net.lag.configgy.{Config=>CConfig}
 import akka.actor._
 import Actor._

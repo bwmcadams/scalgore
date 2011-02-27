@@ -5,7 +5,6 @@
  */
 package net.evilmonkeylabs.scalgore
 
-import org.jibble.pircbot._
 import akka.actor._
 import akka.util._
 import com.mongodb.casbah.Imports._
