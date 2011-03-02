@@ -18,7 +18,7 @@ class IrcConsumer(network: Network, ircLog: ActorRef) extends Actor with Consume
              login <- headers.get("irc.user.username");
            channel <- headers.get("irc.target");
            msgtype <- headers.get("irc.messageType") if msgtype == "PRIVMSG") {
-        ircLog ! IrcPublicMessage(channel, sender, login, host, body)
+        ircLog ! IrcPublicMessage(network.name, channel, sender, login, host, body)
       } // for
     } // case
   } // receive
