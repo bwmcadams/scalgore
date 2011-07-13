@@ -5,7 +5,6 @@
  */
 package net.evilmonkeylabs.scalgore
 
-import org.jibble.pircbot._
 import akka.actor._
 import akka.util._
 import com.mongodb.casbah.Imports._
@@ -22,19 +21,22 @@ trait IrcMessage {
   val date = new java.util.Date // capture date as soon as object is created
 }
 
-case class IrcAction(val sender: String,
+case class IrcAction(val network: String,
+                     val sender: String,
                      val login: String,
                      val hostname: String,
                      val message: String,
                      val target: String) extends IrcMessage
 
-case class IrcPublicMessage(val channel: String,
+case class IrcPublicMessage(val network: String,
+                            val channel: String,
                             val sender: String,
                             val login: String,
                             val hostname: String,
                             val message: String) extends IrcMessage
 
-case class IrcPrivateMessage(val sender: String,
+case class IrcPrivateMessage(val network: String,
+                             val sender: String,
                              val login: String,
                              val hostname: String,
                              val message: String) extends IrcMessage
@@ -45,11 +47,11 @@ class IrcLogger extends Actor with Logging {
   // val es = new TransportClient().addTransportAddress(new InetSocketTransportAddress("localhost", 9300))
 
   def parseMessage(msg: String) = msg.split(" ")
-  def fixChanName(name: String) = name.replaceAll("#", "HASH")
+  def fixChanName(network: String, name: String) = network ++ name.replaceAll("#", "HASH")
   
   def receive = {
-    case pub @ IrcPublicMessage(channel, sender, login, hostname, message) => {
-      val name = fixChanName(channel)
+    case pub @ IrcPublicMessage(network, channel, sender, login, hostname, message) => {
+      val name = fixChanName(network, channel)
       val kws = parseMessage(message)
       val idx = MongoDBObject("sender" -> 1, "keywords" -> 1)
       mongo(name).ensureIndex(idx)
@@ -61,13 +63,13 @@ class IrcLogger extends Actor with Logging {
       //                      .source(obj.toString)).actionGet()
       mongo(name) += (obj)
     }
-    case priv @ IrcPrivateMessage(sender, login, hostname, message) => {
+    case priv @ IrcPrivateMessage(network, sender, login, hostname, message) => {
       val obj = MongoDBObject("type" -> "privateMessage", "sender" -> sender, "login" -> login,
                  "hostname" -> hostname, "message" -> message)
       //mongo("privateMessages") insert(obj) 
     }
-    case act @ IrcAction(sender, login, hostname, message, target) => {
-      val name = fixChanName(target)
+    case act @ IrcAction(network, sender, login, hostname, message, target) => {
+      val name = fixChanName(network, target)
       val kws = parseMessage(message)
       val obj = MongoDBObject("type" -> "action", "target" -> target, "sender" -> sender, "login" -> login,
                  "hostname" -> hostname, "message" -> message, "keywords" -> kws, "date" -> act.date)
