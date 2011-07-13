@@ -3,10 +3,10 @@ import sbt._
 class ScalGoreProject(info: ProjectInfo) extends DefaultProject(info) {
   override val mainClass = Some("net.evilmonkeylabs.scalgore.ScalGore")
 
-  val elasticSearch = "org.elasticsearch" % "elasticsearch" % "0.15.0"
+  val elasticSearch = "org.elasticsearch" % "elasticsearch" % "0.16.3"
   val commonsHTTP = "commons-httpclient" % "commons-httpclient" % "3.1"
   
-  val casbah = "com.mongodb.casbah" %% "casbah" % "2.0.3"
+  val casbah = "com.mongodb.casbah" %% "casbah" % "2.1.5-1"
   val akka_actor = "se.scalablesolutions.akka" % "akka-actor" % "1.0"
   val configgy = "net.lag" % "configgy" % "2.0.2"
   
