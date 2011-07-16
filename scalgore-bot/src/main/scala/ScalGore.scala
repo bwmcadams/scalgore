@@ -5,12 +5,13 @@
  */
 package net.evilmonkeylabs.scalgore
 
-import net.lag.configgy.{Config=>CConfig}
 import akka.actor._
 import Actor._
 import akka.config.Supervision._
+import akka.config.Configuration
 import akka.util._
 import akka.camel._
+import com.mongodb.casbah.commons.Logging
 
 object Config {
 	val networks = "scalgore.networks"
@@ -25,7 +26,7 @@ case class Network(name: String, host: String, nick: String, channels: Seq[Strin
 object ScalGore extends Logging {
 
   def main(args: Array[String]) {
-    val cfg = CConfig.fromResource("scalgore.conf", getClass.getClassLoader)
+    val cfg = Configuration.fromResource("akka.conf", getClass.getClassLoader)
 
     CamelServiceManager.startCamelService
 

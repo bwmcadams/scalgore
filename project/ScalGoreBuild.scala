@@ -23,7 +23,7 @@ object ScalGoreBuild extends Build {
 
   lazy val defaultSettings = baseSettings ++ Seq(
     libraryDependencies ++= Seq(specs2, slf4jJCL),
-    resolvers ++= Seq(scalaToolsReleases, scalaToolsSnapshots, mavenOrgRepo, twttrRepo, sonatypeReleasesRepo),
+    resolvers ++= Seq(scalaToolsReleases, akkaRepo, scalaToolsSnapshots, mavenOrgRepo, twttrRepo, sonatypeReleasesRepo),
     autoCompilerPlugins := true,
     parallelExecution in Test := true,
     testFrameworks += TestFrameworks.Specs2
@@ -60,8 +60,8 @@ object Dependencies {
   val commonsHTTP = "commons-httpclient" % "commons-httpclient" % "3.1"
   
   val casbah = "com.mongodb.casbah" %% "casbah" % "2.1.5-1"
-  val akka_actor = "se.scalablesolutions.akka" % "akka-actor" % "1.0"
-  val akka_camel = "se.scalablesolutions.akka" % "akka-camel" % "1.0"
+  val akka_actor = "se.scalablesolutions.akka" % "akka-actor" % "1.1.3"
+  val akka_camel = "se.scalablesolutions.akka" % "akka-camel" % "1.1.3"
   val camel_irc = "org.apache.camel" % "camel-irc" % "2.5.0"
   val configgy = "net.lag" % "configgy" % "2.0.2"
 

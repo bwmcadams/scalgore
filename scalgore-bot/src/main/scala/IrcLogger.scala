@@ -8,6 +8,7 @@ package net.evilmonkeylabs.scalgore
 import akka.actor._
 import akka.util._
 import com.mongodb.casbah.Imports._
+import com.mongodb.casbah.commons.Logging
 import org.elasticsearch.client.transport._
 import org.elasticsearch.common.transport._
 import org.elasticsearch.client.Requests._

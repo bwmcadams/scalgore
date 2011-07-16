@@ -1,9 +1,9 @@
 package net.evilmonkeylabs.scalgore
 
-import net.lag.configgy.Configgy
 import akka.actor.{Actor, ActorRef}
 import akka.util._
 import akka.camel._
+import com.mongodb.casbah.commons.Logging
 
 class IrcConsumer(network: Network, ircLog: ActorRef) extends Actor with Consumer with Logging {
 
