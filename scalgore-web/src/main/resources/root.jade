@@ -1,0 +1,13 @@
+!!! 5
+-@ val channels: Set[(String, String)]
+html(lang="en")
+  body
+    h1 IRC Logging Frontend (Freenode)
+    #container
+    ul
+      - for ((id, channel) <- channels) 
+        li 
+          a(href="/view/#{id}")=channel
+
+
+    

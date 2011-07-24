@@ -1,0 +1,14 @@
+!!! 5
+- import com.mongodb.casbah.Imports._
+-@ val channel: String
+-@ val messages: MongoCursor 
+- val fmt = new java.text.SimpleDateFormat("'['yyyy-MM-dd '@' kk:mm:ssZ ']'") 
+html(lang="en")
+  body
+    h1 Messages for Freenode #{channel}
+    #container
+      - for (msg <- messages) 
+        #message 
+        = "%s <%s> %s".format(fmt.format(msg.as[java.util.Date]("date")), msg.as[String]("sender"), msg.as[String]("message"))
+
+        
