@@ -23,7 +23,7 @@ object ScalGoreBuild extends Build {
 
   lazy val defaultSettings = baseSettings ++ Seq(
     libraryDependencies ++= Seq(specs2, slf4jJCL),
-    resolvers ++= Seq(scalaToolsReleases, akkaRepo, scalaToolsSnapshots, mavenOrgRepo, twttrRepo, sonatypeReleasesRepo),
+    resolvers ++= Seq(scalaToolsReleases, akkaRepo, scalaToolsSnapshots, mavenOrgRepo, twttrRepo, sonatypeReleasesRepo, sonatypeSnapsRepo),
     autoCompilerPlugins := true,
     parallelExecution in Test := true,
     testFrameworks += TestFrameworks.Specs2
@@ -40,7 +40,7 @@ object ScalGoreBuild extends Build {
     id       = "scalgore-bot",
     base     = file("scalgore-bot"),
     settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Seq(elasticSearch, commonsHTTP, casbah, akka_actor, akka_camel, camel_irc, configgy, specs2, slf4jJCL)
+      libraryDependencies ++= Seq(elasticSearch, commonsHTTP, casbah, akka_actor, akka_camel, camel_irc, configgy, specs2, slf4jJCL) 
     )
   )
 
@@ -48,8 +48,8 @@ object ScalGoreBuild extends Build {
     id       = "scalgore-web",
     base     = file("scalgore-web"),
     settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Seq()
-    )
+      libraryDependencies ++= Seq(casbah, scalatra, scalatraScalate, jetty, javaxServlet)
+    ) ++ com.github.siasia.WebPlugin.webSettings
   )
 
 }
@@ -68,6 +68,11 @@ object Dependencies {
   val specs2 = "org.specs2" %% "specs2" % "1.5" % "test"
   val specs2Compile = "org.specs2" %% "specs2" % "1.5"
 
+  val scalatra = "org.scalatra" %% "scalatra" % "2.0.0-SNAPSHOT"
+  val scalatraScalate = "org.scalatra" %% "scalatra-scalate" % "2.0.0-SNAPSHOT"
+  val jetty = "org.mortbay.jetty" % "jetty" % "6.1.22" % "jetty"
+  val javaxServlet = "javax.servlet" % "servlet-api" % "2.5" % "provided"
+
   // JCL bindings for testing only
   val slf4jJCL         = "org.slf4j" % "slf4j-jcl" % "1.6.0" % "test"
 
@@ -82,6 +87,7 @@ object Resolvers {
   val mavenOrgRepo = "Maven.Org Repository" at "http://repo1.maven.org/maven2/org/"
   val twttrRepo = "Twitter Public Repo" at "http://maven.twttr.com"
   val sonatypeReleasesRepo = "Sonatype OSS Repo" at "http://oss.sonatype.org/content/repositories/releases"
+  val sonatypeSnapsRepo = "Sonatype OSS Repo" at "http://oss.sonatype.org/content/repositories/snapshots"
 }
 
 
