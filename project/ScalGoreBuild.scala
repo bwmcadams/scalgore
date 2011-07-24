@@ -48,8 +48,8 @@ object ScalGoreBuild extends Build {
     id       = "scalgore-web",
     base     = file("scalgore-web"),
     settings = defaultSettings ++ Seq(
-      libraryDependencies ++= Seq(casbah, scalatra, scalatraScalate, jetty, javaxServlet)
-    ) ++ com.github.siasia.WebPlugin.webSettings
+      libraryDependencies ++= Seq(casbah, unfilteredFilter, unfilteredJetty, unfilteredNetty, unfilteredScalate, javaxServlet)
+    ) //++ com.github.siasia.WebPlugin.webSettings
   )
 
 }
@@ -68,13 +68,14 @@ object Dependencies {
   val specs2 = "org.specs2" %% "specs2" % "1.5" % "test"
   val specs2Compile = "org.specs2" %% "specs2" % "1.5"
 
-  val scalatra = "org.scalatra" %% "scalatra" % "2.0.0-SNAPSHOT"
-  val scalatraScalate = "org.scalatra" %% "scalatra-scalate" % "2.0.0-SNAPSHOT"
-  val jetty = "org.mortbay.jetty" % "jetty" % "6.1.22" % "jetty"
-  val javaxServlet = "javax.servlet" % "servlet-api" % "2.5" % "provided"
+  val unfilteredFilter = "net.databinder" %% "unfiltered-filter" % "0.4.0"
+  val unfilteredJetty  = "net.databinder" %% "unfiltered-jetty" % "0.4.0"
+  val unfilteredNetty  = "net.databinder" %% "unfiltered-netty-server" % "0.4.0"
+  val unfilteredScalate = "net.databinder" %% "unfiltered-scalate" % "0.4.0"
+  val javaxServlet = "javax.servlet" % "servlet-api" % "2.5" 
 
   // JCL bindings for testing only
-  val slf4jJCL         = "org.slf4j" % "slf4j-jcl" % "1.6.0" % "test"
+  val slf4jJCL         = "org.slf4j" % "slf4j-jcl" % "1.6.0"
 
 }
 
